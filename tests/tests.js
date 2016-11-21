@@ -10,7 +10,7 @@ var ElasticsearchScrollStream = require('../index.js');
 
 describe('elasticsearch_scroll_stream', function() {
 
-  it('Lib Elastical: stream data correctly from elasticsearch', function(done) {
+  it.skip('Lib Elastical: stream data correctly from elasticsearch', function(done) {
     var counter = 0;
     var current_doc;
     var elastical_client = new elastical.Client();
@@ -18,10 +18,12 @@ describe('elasticsearch_scroll_stream', function() {
     var es_stream = new ElasticsearchScrollStream(elastical_client, {
       index: 'elasticsearch-test-scroll-stream',
       type: 'test-type',
-      search_type: 'scan',
       scroll: '10s',
       size: '50',
-      fields: ['name'],
+      _sourceInclude: ['name'],
+      sort: [
+        "_doc"
+      ],
       query: {
         bool: {
           must: [
@@ -38,7 +40,7 @@ describe('elasticsearch_scroll_stream', function() {
 
     es_stream.on('data', function(data) {
       current_doc = JSON.parse(data.toString());
-      expect(current_doc.name[0]).to.equal("second chunk name");
+      expect(current_doc.name).to.equal("second chunk name");
       counter++;
     });
 
@@ -64,7 +66,10 @@ describe('elasticsearch_scroll_stream', function() {
       type: 'test-type',
       scroll: '10s',
       size: '50',
-      fields: ['name'],
+      _sourceInclude: ['name'],
+      sort: [
+        "_doc"
+      ],
       body: {
         query: {
           bool: {
@@ -83,7 +88,7 @@ describe('elasticsearch_scroll_stream', function() {
 
     es_stream.on('data', function(data) {
       current_doc = JSON.parse(data.toString());
-      expect(current_doc.name[0]).to.equal("third chunk name");
+      expect(current_doc.name).to.equal("third chunk name");
       counter++;
     });
 
@@ -109,7 +114,10 @@ describe('elasticsearch_scroll_stream', function() {
       type: 'test-type',
       scroll: '10s',
       size: '50',
-      _source: ["name"],
+      _sourceInclude: ['name'],
+      sort: [
+        "_doc"
+      ],
       body: {
         query: {
           bool: {
@@ -198,7 +206,10 @@ describe('elasticsearch_scroll_stream', function() {
       type: 'test-type',
       scroll: '10s',
       size: '50',
-      fields: ['name'],
+      _sourceInclude: ['name'],
+      sort: [
+        "_doc"
+      ],
       body: {
         query: {
           bool: {
@@ -217,7 +228,7 @@ describe('elasticsearch_scroll_stream', function() {
 
     es_stream.on('data', function(data) {
       current_doc = JSON.parse(data.toString());
-      expect(current_doc.name[0]).to.equal("third chunk name");
+      expect(current_doc.name).to.equal("third chunk name");
       expect(current_doc).to.have.property("_id");
       counter++;
     });
@@ -243,7 +254,10 @@ describe('elasticsearch_scroll_stream', function() {
       type: 'test-type',
       scroll: '10s',
       size: '50',
-      _source: ["name"],
+      _sourceInclude: ['name'],
+      sort: [
+        "_doc"
+      ],
       body: {
         query: {
           bool: {
@@ -287,7 +301,10 @@ describe('elasticsearch_scroll_stream', function() {
       type: 'test-type',
       scroll: '10s',
       size: '50',
-      _source: ["name"],
+      _sourceInclude: ['name'],
+      sort: [
+        "_doc"
+      ],
       body: {
         query: {
           bool: {
@@ -315,7 +332,10 @@ describe('elasticsearch_scroll_stream', function() {
       type: 'test-type',
       scroll: '10s',
       size: '50',
-      _source: ["name"],
+      _sourceInclude: ['name'],
+      sort: [
+        "_doc"
+      ],
       body: {
         query: {
           bool: {
